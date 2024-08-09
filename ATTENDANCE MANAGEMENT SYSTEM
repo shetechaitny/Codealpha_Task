@@ -1,0 +1,31 @@
+import com.university.ams.model.Student;
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
+
+public class StudentService {
+    private final String URL = "jdbc:mysql://localhost:3306/attendance_management";
+    private final String USER = "root";
+    private final String PASSWORD = "your_password";
+
+    public List<Student> getAllStudents() {
+        List<Student> students = new ArrayList<>();
+        try (Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
+             Statement statement = connection.createStatement();
+             ResultSet resultSet = statement.executeQuery("SELECT * FROM students")) {
+
+            while (resultSet.next()) {
+                Student student = new Student();
+                student.setId(resultSet.getInt("id"));
+                student.setName(resultSet.getString("name"));
+                student.setEmail(resultSet.getString("email"));
+                students.add(student);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return students;
+    }
+
+    // Add methods to add, update, delete students
+}
